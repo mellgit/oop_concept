@@ -16,10 +16,13 @@ class Person:
         self.verify_weight(weight)
         self.verify_ps(ps)
 
+        # вариант лучше
         self.__fio = fio.split()
-        self.__old = old
-        self.__passport = ps
-        self.__weight = weight
+        self.old = old # в таком случае сразу буду вызваны сеттеры
+        self.passport = ps
+        self.weight = weight
+        
+        
 
     @classmethod
     def verify_fio(cls, fio):
@@ -42,11 +45,11 @@ class Person:
     @classmethod
     def verify_old(cls, old):
         if type(old) != int or old < 14 or old > 120:
-            raise TypeError('age must be a number in the range')
+            raise TypeError('age must be a number in the range [14;120]')
 
     @classmethod
     def verify_weight(cls, w):
-        if type(w) != int or w < 20:
+        if type(w) != float or w < 20:
             raise TypeError('weight must be a number 20 or more')
 
 
@@ -63,10 +66,47 @@ class Person:
             if not p.isdigit():
                 raise TypeError('series and passport number must be numbers')
 
+    @property
+    def fio(self):
+        return self.__fio
 
+    @property
+    def old(self):
+        return self.__old
+
+    @old.setter
+    def old(self, old):
+        self.verify_old(old)
+        self.__old = old
+
+    @property
+    def weight(self):
+        return self.__weight
+
+    @weight.setter
+    def weight(self, weight):
+        self.verify_weight(weight)
+        self.__weight = weight
+
+    @property
+    def passport(self):
+        return self.__passport
+
+    @passport.setter
+    def passport(self, passport):
+        self.verify_ps(passport)
+        self.__passport = passport
+
+    
 
 
 
 p = Person('Иванов Иван Иванович', 30, '1234 567890', 80.0) # True
 # p = Person('ИвановИван Иванович', 30, '1234 567890',80.0)  # TypeError: wrong format
 
+p.old = 100
+p.passport = '2345 345655'
+p.weight = 70.0
+
+print(p.__dict__)
+# {'_Person__fio': ['Иванов', 'Иван', 'Иванович'], '_Person__old': 100, '_Person__passport': '2345 345655', '_Person__weight': 70.0}
